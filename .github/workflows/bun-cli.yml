@@ -1,0 +1,33 @@
+name: Build Single Executable Tool
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # todo: runs on new git tags
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build Cross
+        run: bun run build:cross
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: builds
+          path: |
+            build/Release/igf-darwin-x64
+            build/Release/igf-darwin-arm64
+            build/Release/igf-linux-x64
+            build/Release/igf-windows-x64
+            build/Release/igf-windows-x64.exe
